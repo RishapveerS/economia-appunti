@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Search, X } from 'lucide-react';
+import { Search, X, Menu } from 'lucide-react';
 import { courseContent } from '../data/courseContent';
 
 interface SearchResult {
@@ -106,24 +106,36 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-xl transition-all duration-300 ${hidden ? '-translate-y-full' : 'translate-y-0'
         }`}
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <h1 className="font-serif text-lg tracking-wider text-gray-200">
-          ECONOMIA <span className="text-premium-gold font-italic">AZIENDALE</span>
-        </h1>
+        <div className="flex items-center gap-4">
+          {/* Mobile Menu Button */}
+          <button
+            className="lg:hidden text-gray-400 hover:text-white transition-colors"
+            onClick={() => setMobileMenuOpen(true)}
+          >
+            <Menu size={24} />
+          </button>
+
+          <h1 className="font-serif text-lg tracking-wider text-gray-200 truncate">
+            ECONOMIA <span className="text-premium-gold font-italic">AZIENDALE</span>
+          </h1>
+        </div>
 
         <div className="flex items-center gap-4">
           <div className="relative group">
-            <div className={`flex items-center bg-white/5 border border-white/10 rounded-full px-3 py-1.5 transition-all duration-300 focus-within:w-64 focus-within:bg-black/80 focus-within:border-premium-gold/50 w-32 sm:w-48`}>
-              <Search size={14} className="text-gray-500 mr-2" />
+            <div className={`flex items-center bg-white/5 border border-white/10 rounded-full px-3 py-1.5 transition-all duration-300 focus-within:w-48 sm:focus-within:w-64 focus-within:bg-black/80 focus-within:border-premium-gold/50 w-28 sm:w-48`}>
+              <Search size={14} className="text-gray-500 mr-2 flex-shrink-0" />
               <input
                 type="text"
                 placeholder="Cerca..."
-                className="bg-transparent border-none outline-none text-sm text-gray-200 w-full placeholder-gray-600"
+                className="bg-transparent border-none outline-none text-sm text-gray-200 w-full placeholder-gray-600 min-w-0"
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 onFocus={() => {
@@ -137,7 +149,7 @@ const Header: React.FC = () => {
                     setSearchResults([]);
                     setShowResults(false);
                   }}
-                  className="text-gray-500 hover:text-white"
+                  className="text-gray-500 hover:text-white flex-shrink-0"
                 >
                   <X size={12} />
                 </button>
@@ -146,7 +158,7 @@ const Header: React.FC = () => {
 
             {/* Search Results Dropdown */}
             {showResults && searchResults.length > 0 && (
-              <div className="absolute top-full right-0 mt-2 w-80 sm:w-96 bg-black/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl overflow-hidden max-h-[60vh] overflow-y-auto z-50 animate-in fade-in slide-in-from-top-2">
+              <div className="absolute top-full right-0 mt-2 w-[85vw] sm:w-96 bg-black/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl overflow-hidden max-h-[60vh] overflow-y-auto z-50 animate-in fade-in slide-in-from-top-2">
                 <div className="sticky top-0 bg-black/95 backdrop-blur-md p-2 border-b border-white/10 flex justify-between items-center">
                   <span className="text-xs font-mono text-premium-gold uppercase tracking-widest px-2">
                     {searchResults.length} Risultati
@@ -212,6 +224,59 @@ const Header: React.FC = () => {
           style={{ width: `${progress}%` }}
         />
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[60] lg:hidden">
+          <div
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div className="absolute top-0 left-0 bottom-0 w-[80%] max-w-sm bg-[#0a0a0a] border-r border-white/10 shadow-2xl p-6 overflow-y-auto animate-in slide-in-from-left duration-300">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="font-serif text-xl text-premium-gold">Indice</h2>
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-gray-400 hover:text-white"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <div className="space-y-8">
+              {courseContent.map((section, sectionIndex) => (
+                <div key={section.id}>
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/20 text-[10px] font-mono text-gray-400">
+                      {sectionIndex + 1}
+                    </span>
+                    <span className="text-xs font-medium uppercase tracking-wide text-gray-200">
+                      {section.title.split(':')[0]}
+                    </span>
+                  </div>
+                  <div className="ml-3 border-l border-white/10 pl-4 flex flex-col gap-3">
+                    {section.subsections.map((subsection, subIndex) => (
+                      <button
+                        key={`${section.id}-${subIndex}`}
+                        className="text-left text-sm text-gray-400 hover:text-premium-gold transition-colors"
+                        onClick={() => {
+                          const element = document.getElementById(`${section.id}-${subIndex}`);
+                          if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
+                          setMobileMenuOpen(false);
+                        }}
+                      >
+                        {subsection.title}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
