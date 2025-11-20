@@ -260,10 +260,12 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
       displayMode: true,
     });
     return (
-      <div
-        className="my-8 overflow-x-auto py-4"
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      <div className="my-8 overflow-x-auto py-4">
+        <div
+          className="inline-block border-b-2 border-dotted border-premium-gold/50 pb-2"
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
+      </div>
     );
   }
 
