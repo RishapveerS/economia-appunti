@@ -364,8 +364,12 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
     return <p className="font-serif text-lg text-premium-gold mt-8 mb-2">{item}</p>;
   }
 
-  // Check for numbered sub-headings (e.g. 1.1.1, 2.1.3) that are not in the gold list
-  if (/^\d+(\.\d+)+\s/.test(text)) {
+  // Check for numbered sub-headings (e.g. 1.1.1, 2.1.3) OR single numbered lists (e.g. 1. Title)
+  // The regex matches:
+  // ^\d+(\.\d+)+\s  -> 1.1, 1.1.1 (multi-level)
+  // OR
+  // ^\d+\.\s        -> 1., 2. (single level)
+  if (/^(\d+(\.\d+)+|\d+\.)\s/.test(text)) {
     return (
       <p className="font-bold text-lg text-white mt-6 mb-2">
         {renderWithHighlights(item as string)}
