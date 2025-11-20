@@ -780,7 +780,7 @@ export const courseContent: MainSection[] = [
       {
         title: "Lezione 2.3 ‐‐> Stato Patrimoniale: Attivo (Attività Correnti e Non Correnti, Valutazioni e Ammortamento)",
         content: [
-          `**Stato patrimoniale: idea generale**`,
+
           `È un documento del bilancio che rappresenta la situazione patrimoniale dell’impresa in un istante preciso, di solito il 31 dicembre dell’anno T.`,
           `È una “fotografia” del patrimonio, divisa in due sezioni contrapposte:`,
           `● l'**Attivo** (a sinistra), che rappresenta gli IMPIEGHI delle risorse, ovvero in cosa sono state investite`,
