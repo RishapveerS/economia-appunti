@@ -166,7 +166,7 @@ export const courseContent: MainSection[] = [
           `1. Imprese profit oriented (aziende di produzione)`,
           `Hanno come scopo la massimizzazione del profitto e del valore economico per i proprietari. La loro attività consiste nella produzione di beni e/o servizi da vendere sul mercato. L'utile è dato dai ricavi della vendita meno i costi per produrli:`,
           `$$Utile = Ricavi - Costi$$`, ,
-          `Sono il focus principale del corso.`,
+
           `2. Imprese not for profit (aziende di erogazione/consumo)`,
           `Hanno un vincolo esplicito per cui gli utili non possono essere distribuiti ai proprietari, ma devono essere reinvestiti nell’impresa. Il loro obiettivo è soddisfare bisogni umani o i desideri dei fondatori e dei portatori di interesse. Esempi includono fondazioni e associazioni. Sono comunque imprese, in quanto coordinano stabilmente risorse nel tempo, ma non per massimizzare il profitto, bensì per perseguire una finalità sociale o specifica.`,
           `3. Società cooperative (aziende mutualistiche)`,
@@ -643,7 +643,7 @@ export const courseContent: MainSection[] = [
           `È lo strumento principale di accountability esterna dell’impresa: l’impresa “rende conto” del proprio operato a soggetti esterni.`,
           `Si concentra solo su dati economici, dati finanziari e dati patrimoniali (non su dimensioni, settore, ecc. se non indirettamente).`,
           `È redatto secondo regole precise fissate da leggi e regolamenti, il che significa che ha la stessa struttura per tutte le imprese, rendendo i bilanci confrontabili.`,
-          `Quando saprai leggerlo, potrai leggere il bilancio di qualsiasi impresa.`,
+
           `Chi è interessato al bilancio`,
           `I principali lettori del bilancio sono:`,
           `● Azionisti / proprietari: Il bilancio è redatto dal CdA ed è approvato dall’assemblea dei soci. Serve a capire se l’impresa remunera il capitale di rischio (dividendi).`,
@@ -1059,7 +1059,7 @@ export const courseContent: MainSection[] = [
         title: "Lezione 3.0 ‐‐> Contabilità Interna (Analitica): Obiettivi e Strumenti per il Management",
         content: [
           `Contabilità interna: introduzione`,
-          `In questa sezione si passa dalla contabilità esterna (bilancio, conto economico, stato patrimoniale) alla contabilità interna o analitica, che serve ai manager per prendere decisioni.`,
+
           `1.1 Differenze chiave: contabilità esterna vs interna`,
           `● La contabilità esterna:`,
           `○ classifica costi e ricavi per natura (personale, materie prime, ammortamenti, ecc.)`,
@@ -1080,15 +1080,9 @@ export const courseContent: MainSection[] = [
       {
         title: "Lezione 3.1 ‐‐> Definizione e Classificazione di Costi (Diretti/Indiretti, Variabili/Fissi, Prodotto/Periodo)",
         content: [
-          `Definizione di costo nel modulo`,
+          `Definizione di costo`,
           `Il costo è il valore che misura il consumo di risorse impiegate per attività rivolte alla produzione di beni e servizi.`,
-          `Sulla base di questo, il modulo tratterà:`,
-          `● varie classificazioni di costo (diretto/indiretto, fisso/variabile, di prodotto/di periodo)`,
-          `● il costo pieno industriale e il costo pieno aziendale`,
-          `● diverse tecniche di costing`,
-          `Gli obiettivi del modulo sono:`,
-          `● saper classificare le diverse tipologie di costo`,
-          `● saper applicare le tecniche di costing per calcolare il costo dei prodotti/servizi`,
+
           `Perché serve una contabilità interna?`,
           `Nel bilancio (contabilità generale):`,
           `● i costi sono per natura`,
@@ -1216,7 +1210,7 @@ export const courseContent: MainSection[] = [
           `○ costruire budget`,
           `○ fare analisi degli scostamenti`,
           `Attribuzione vs allocazione`,
-          `Nel linguaggio del corso:`,
+
           `● l'attribuzione si riferisce a quando il costo è diretto e può essere collegato in modo immediato all'oggetto di costo`,
           `● l'allocazione, invece, si ha quando il costo è indiretto e deve essere ripartito usando dei criteri`,
           `Allocazione dei costi indiretti`,
@@ -1246,7 +1240,6 @@ export const courseContent: MainSection[] = [
           `● una logica causale, quando c’è un nesso diretto e osservabile`,
           `● una logica proporzionale, quando il costo viene ripartito usando una base di allocazione`,
           `I tre metodi tradizionali`,
-          `La lezione presenta tre metodi tradizionali:`,
           `● Process costing`,
           `● Job order costing`,
           `● Operation costing`,
@@ -1355,7 +1348,7 @@ export const courseContent: MainSection[] = [
           `○ IRR / TIR (Internal Rate of Return / Tasso Interno di Rendimento)`,
           `○ Payback attualizzato`,
           `● I metodi non DCF, invece, non attualizzano i flussi, trascurando il time value of money.`,
-          `Decisioni di breve periodo studiate nel modulo`,
+          `Decisioni di breve periodo`,
           `Le decisioni di breve periodo che saranno analizzate includono:`,
           `● Break‐even quantity: la quantità alla quale i ricavi eguagliano i costi totali, portando a un utile pari a zero. Oltre tale quantità, l’impresa va in profitto.`,
           `● Mix produttivo ottimale: il mix di prodotti che massimizza il profitto, dati i limiti della domanda di mercato e i vincoli di capacità produttiva.`,
