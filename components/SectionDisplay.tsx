@@ -5,78 +5,17 @@ import image1 from '../images/image1.jpg';
 import image2 from '../images/image2.jpg';
 import valueChainImg from '../images/value_chain.png';
 import orgChartImg from '../images/org_chart.png';
-import katex from 'katex';
 import { Search, X, ZoomIn, Info } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { createPortal } from 'react-dom';
+
+const RiskRewardChart = React.lazy(() => import('./RiskRewardChart'));
+const MathRenderer = React.lazy(() => import('./MathRenderer'));
 
 interface SectionDisplayProps {
   section: MainSection;
 }
 
-const GLOSSARY_TERMS: Record<string, string> = {
-  'stakeholder': 'Soggetto che ha un interesse (stake) nell\'attività dell\'impresa.',
-  'shareholder': 'Azionista, proprietario di quote del capitale sociale.',
-  'shareholders': 'Proprietari dell’impresa (azionisti/soci).',
-  'core business': 'Attività principale dell\'impresa, quella che genera il maggior fatturato.',
-  'governance': 'Sistema di regole e organi per il governo e il controllo dell\'impresa.',
-  'corporate governance': 'Sistema di regole per il governo e controllo dell’impresa.',
-  'b2b': 'Business to Business: transazioni commerciali tra imprese.',
-  'b2c': 'Business to Consumer: transazioni tra impresa e consumatore finale.',
-  'startup': 'Impresa di recente costituzione ad alto contenuto innovativo.',
-  'spin-off': 'Nuova impresa nata da una costola di un\'altra impresa o ente di ricerca.',
-  'ammortamento': 'Procedimento contabile di ripartizione del costo di un bene pluriennale.',
-  'utile': 'Differenza positiva tra ricavi e costi di un esercizio.',
-  'profitto': 'Guadagno economico derivante dall\'attività d\'impresa.',
-  'asset': 'Risorsa economica posseduta dall\'impresa che si prevede fornirà benefici futuri.',
-  'liability': 'Obbligazione attuale dell\'impresa derivante da eventi passati.',
-  'equity': 'Patrimonio netto, la differenza tra attività e passività.',
-  'cash flow': 'Flusso di cassa, la differenza tra entrate e uscite monetarie.',
-  'flusso di cassa': 'Differenza tra entrate e uscite monetarie.',
-  'roi': 'Return on Investment, indice di redditività del capitale investito.',
-  'roe': 'Return on Equity, indice di redditività del capitale proprio.',
-  'ebitda': 'Utile prima di interessi, tasse, svalutazioni e ammortamenti.',
-  'impresa': 'Attività economica organizzata per la produzione o scambio di beni/servizi.',
-  'imprenditore': 'Chi esercita professionalmente un’attività economica organizzata.',
-  'azienda': 'Il complesso dei beni organizzati dall’imprenditore.',
-  'manager': 'Professionisti che gestiscono l’impresa.',
-  'valore economico': 'Capacità di generare rendimento futuro.',
-  'bilancio': 'Documento che rappresenta la situazione patrimoniale e finanziaria.',
-  'ricavi': 'Valore delle vendite di beni e servizi.',
-  'costi': 'Valore delle risorse consumate.',
-};
-
-// Helper for regex
-const highlightTokens = Object.keys(GLOSSARY_TERMS);
-const escapedTokens = highlightTokens.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-// Sort tokens by length descending to match longest terms first
-escapedTokens.sort((a, b) => b.length - a.length);
-const highlightPattern = new RegExp(`(\\*\\*|\\b(?:${escapedTokens.join('|')})\\b)`, 'gi');
-
-const GlossaryTooltip: React.FC<{ term: string; definition?: string; children: React.ReactNode }> = ({ term, definition, children }) => {
-  const [show, setShow] = useState(false);
-
-  const def = definition || GLOSSARY_TERMS[term.toLowerCase()];
-
-  if (!def) return <>{children}</>;
-
-  return (
-    <span
-      className="relative inline-block cursor-help group"
-      onMouseEnter={() => setShow(true)}
-      onMouseLeave={() => setShow(false)}
-    >
-      <span className="border-b border-dotted border-premium-gold/50">{children}</span>
-      {show && (
-        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-black/90 backdrop-blur-xl border border-premium-gold/30 rounded-lg shadow-xl z-50 text-xs text-gray-300 leading-relaxed animate-in fade-in zoom-in duration-200">
-          <span className="block font-serif text-premium-gold mb-1 capitalize">{term}</span>
-          {def}
-          <span className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 bg-black/90 border-r border-b border-premium-gold/30 rotate-45"></span>
-        </span>
-      )}
-    </span>
-  );
-};
+const highlightPattern = /(\*\*)/g;
 
 const ImageThumbnail: React.FC<{ src: string; alt: string; onImageClick: (src: string, alt: string) => void }> = ({ src, alt, onImageClick }) => {
   return (
@@ -87,6 +26,7 @@ const ImageThumbnail: React.FC<{ src: string; alt: string; onImageClick: (src: s
       <img
         src={src}
         alt={alt}
+        loading="lazy"
         className="w-full h-auto filter grayscale hover:grayscale-0 transition-all duration-700"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none flex items-end justify-center pb-4">
@@ -117,21 +57,10 @@ const renderWithHighlights = (value: string, boldClass = "font-bold text-white")
       return;
     }
 
-    const lowerPart = part.toLowerCase();
-    if (GLOSSARY_TERMS[lowerPart]) {
-      result.push(
-        <GlossaryTooltip key={index} term={part} definition={GLOSSARY_TERMS[lowerPart]}>
-          <span className="font-bold text-white bg-premium-gold/10 px-1 rounded-sm transition-colors duration-300 hover:bg-premium-gold/20">
-            {part}
-          </span>
-        </GlossaryTooltip>
-      );
+    if (isBold) {
+      result.push(<strong key={index} className={boldClass}>{part}</strong>);
     } else {
-      if (isBold) {
-        result.push(<strong key={index} className={boldClass}>{part}</strong>);
-      } else {
-        result.push(<span key={index}>{part}</span>);
-      }
+      result.push(<span key={index}>{part}</span>);
     }
   });
 
@@ -178,33 +107,9 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
           </div>
 
           <div className="p-6 rounded-xl border border-white/10 bg-gradient-to-b from-white/5 to-transparent">
-            <h4 className="text-sm font-mono text-gray-400 uppercase tracking-widest mb-6 border-b border-white/10 pb-2">
-              Analisi Rischio vs. Rendimento Potenziali
-            </h4>
-            <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" horizontal={false} />
-                  <XAxis type="number" domain={[0, 100]} hide />
-                  <YAxis dataKey="name" type="category" width={100} tick={{ fill: '#9ca3af', fontSize: 12 }} axisLine={false} tickLine={false} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: '#0a0a0a', borderColor: '#333', color: '#fff' }}
-                    itemStyle={{ color: '#fff' }}
-                    cursor={{ fill: 'rgba(255,255,255,0.05)' }}
-                  />
-                  <Bar dataKey="risk" name="Esposizione al Rischio" fill="#ef4444" radius={[0, 4, 4, 0]} barSize={20} />
-                  <Bar dataKey="reward" name="Potenziale di Rendimento" fill="#D4AF37" radius={[0, 4, 4, 0]} barSize={20} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="flex justify-center gap-6 mt-4 text-xs text-gray-500 font-mono">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-sm bg-red-500"></span> Rischio
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-sm bg-[#D4AF37]"></span> Rendimento
-              </div>
-            </div>
+            <React.Suspense fallback={<div className="h-[300px] w-full animate-pulse bg-white/5 rounded-lg"></div>}>
+              <RiskRewardChart data={chartData} />
+            </React.Suspense>
           </div>
         </div>
       );
@@ -269,17 +174,10 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
 
   if (text.startsWith('$$')) {
     const latex = text.replace(/^\$\$|\$\$$/g, '');
-    const html = katex.renderToString(latex, {
-      throwOnError: false,
-      displayMode: true,
-    });
     return (
-      <div className="my-8 overflow-x-auto py-4">
-        <div
-          className="inline-block bg-premium-gold/20 px-4 py-2 rounded-sm"
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
-      </div>
+      <React.Suspense fallback={<div className="my-8 h-12 animate-pulse bg-white/5 rounded-sm"></div>}>
+        <MathRenderer latex={latex} />
+      </React.Suspense>
     );
   }
 
@@ -487,7 +385,7 @@ const Lightbox: React.FC<LightboxProps> = ({ src, alt, onClose }) => {
     return () => window.removeEventListener('keydown', handleEsc);
   }, [onClose]);
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-md p-4 animate-in fade-in duration-200"
       onClick={onClose}
@@ -507,7 +405,8 @@ const Lightbox: React.FC<LightboxProps> = ({ src, alt, onClose }) => {
       <p className="absolute bottom-6 left-0 right-0 text-center text-gray-400 font-mono text-sm tracking-widest uppercase pointer-events-none">
         {alt}
       </p>
-    </div>
+    </div>,
+    document.body
   );
 };
 
@@ -524,7 +423,7 @@ const SectionDisplay: React.FC<SectionDisplayProps> = ({ section }) => {
   const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
   return (
-    <section id={section.id} className="pt-20 -mt-20">
+    <section id={section.id} className="pt-20 -mt-20" style={{ contentVisibility: 'auto', containIntrinsicSize: '1000px' } as React.CSSProperties}>
       {lightboxImage && (
         <Lightbox
           src={lightboxImage.src}
@@ -534,9 +433,11 @@ const SectionDisplay: React.FC<SectionDisplayProps> = ({ section }) => {
       )}
       <div className="mb-12">
         <div className="flex items-center gap-3 mb-4">
-          <span className="text-xs font-mono text-premium-gold uppercase tracking-widest border border-premium-gold/30 px-2 py-1 rounded">
-            Lezione {section.id.split('-')[0] === 'fondamenti' ? '1' : '2'}
-          </span>
+          {!['glossario', 'formulario-esempi'].includes(section.id) && (
+            <span className="text-xs font-mono text-premium-gold uppercase tracking-widest border border-premium-gold/30 px-2 py-1 rounded">
+              Lezione {section.id.split('-')[0] === 'fondamenti' ? '1' : section.id.split('-')[0].replace('lezione', '')}
+            </span>
+          )}
           <span className="text-xs font-mono text-gray-500 uppercase tracking-widest flex items-center gap-1">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             {readingTime} min read
@@ -563,4 +464,4 @@ const SectionDisplay: React.FC<SectionDisplayProps> = ({ section }) => {
   );
 };
 
-export default SectionDisplay;
+export default React.memo(SectionDisplay);

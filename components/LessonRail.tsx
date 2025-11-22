@@ -42,9 +42,15 @@ const LessonRail: React.FC = () => {
             return (
               <div key={section.id} className="group">
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/20 text-[10px] font-mono text-gray-400 group-hover:border-premium-gold group-hover:text-premium-gold transition-colors">
-                    {sectionIndex + 1}
-                  </span>
+                  {!['glossario', 'formulario-esempi'].includes(section.id) ? (
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full border border-white/20 text-[10px] font-mono text-gray-400 group-hover:border-premium-gold group-hover:text-premium-gold transition-colors">
+                      {sectionIndex + 1}
+                    </span>
+                  ) : (
+                    <span className="flex h-6 w-6 items-center justify-center text-gray-400">
+                      •
+                    </span>
+                  )}
                   <span className="text-xs font-medium uppercase tracking-wide text-gray-400 group-hover:text-gray-200 transition-colors">
                     {shortTitle}
                   </span>
@@ -61,8 +67,8 @@ const LessonRail: React.FC = () => {
                         type="button"
                         onClick={() => handleClick(anchorId)}
                         className={`text-left text-sm transition-all duration-300 ${isActive
-                            ? 'text-premium-gold font-medium translate-x-1'
-                            : 'text-gray-500 hover:text-gray-300'
+                          ? 'text-premium-gold font-medium translate-x-1'
+                          : 'text-gray-500 hover:text-gray-300'
                           }`}
                       >
                         {subsection.title}

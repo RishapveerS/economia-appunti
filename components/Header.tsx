@@ -108,6 +108,17 @@ const Header: React.FC = () => {
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [mobileMenuOpen]);
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/60 backdrop-blur-xl transition-all duration-300 ${hidden ? '-translate-y-full' : 'translate-y-0'
@@ -232,7 +243,7 @@ const Header: React.FC = () => {
             className="absolute inset-0 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200"
             onClick={() => setMobileMenuOpen(false)}
           />
-          <div className="absolute top-0 left-0 bottom-0 w-[80%] max-w-sm bg-[#0a0a0a] border-r border-white/10 shadow-2xl p-6 overflow-y-auto animate-in slide-in-from-left duration-300">
+          <div className="absolute top-0 left-0 bottom-0 w-[80%] max-w-sm bg-[#0a0a0a] border-r border-white/10 shadow-2xl p-6 overflow-y-auto animate-in slide-in-from-left duration-300 overscroll-contain">
             <div className="flex justify-between items-center mb-8">
               <h2 className="font-serif text-xl text-premium-gold">Indice</h2>
               <button

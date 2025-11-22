@@ -1564,6 +1564,46 @@ export const courseContent: MainSection[] = [
     ]
   },
   {
+    id: "glossario",
+    title: "Glossario",
+    subsections: [
+      {
+        title: "Termini e Definizioni",
+        content: [
+          `**Stakeholder**: Soggetto che ha un interesse (stake) nell'attività dell'impresa.`,
+          `**Shareholder**: Azionista, proprietario di quote del capitale sociale.`,
+          `**Shareholders**: Proprietari dell’impresa (azionisti/soci).`,
+          `**Core business**: Attività principale dell'impresa, quella che genera il maggior fatturato.`,
+          `**Governance**: Sistema di regole e organi per il governo e il controllo dell'impresa.`,
+          `**Corporate governance**: Sistema di regole per il governo e controllo dell’impresa.`,
+          `**B2B**: Business to Business: transazioni commerciali tra imprese.`,
+          `**B2C**: Business to Consumer: transazioni tra impresa e consumatore finale.`,
+          `**Startup**: Impresa di recente costituzione ad alto contenuto innovativo.`,
+          `**Spin-off**: Nuova impresa nata da una costola di un'altra impresa o ente di ricerca.`,
+          `**Ammortamento**: Procedimento contabile di ripartizione del costo di un bene pluriennale.`,
+          `**Utile**: Differenza positiva tra ricavi e costi di un esercizio.`,
+          `**Profitto**: Guadagno economico derivante dall'attività d'impresa.`,
+          `**Asset**: Risorsa economica posseduta dall'impresa che si prevede fornirà benefici futuri.`,
+          `**Liability**: Obbligazione attuale dell'impresa derivante da eventi passati.`,
+          `**Equity**: Patrimonio netto, la differenza tra attività e passività.`,
+          `**Cash flow**: Flusso di cassa, la differenza tra entrate e uscite monetarie.`,
+          `**Flusso di cassa**: Differenza tra entrate e uscite monetarie.`,
+          `**ROI**: Return on Investment, indice di redditività del capitale investito.`,
+          `**ROE**: Return on Equity, indice di redditività del capitale proprio.`,
+          `**EBITDA**: Utile prima di interessi, tasse, svalutazioni e ammortamenti.`,
+          `**Impresa**: Attività economica organizzata per la produzione o scambio di beni/servizi.`,
+          `**Imprenditore**: Chi esercita professionalmente un’attività economica organizzata.`,
+          `**Azienda**: Il complesso dei beni organizzati dall’imprenditore.`,
+          `**Manager**: Professionisti che gestiscono l’impresa.`,
+          `**Valore economico**: Capacità di generare rendimento futuro.`,
+          `**Bilancio**: Documento che rappresenta la situazione patrimoniale e finanziaria.`,
+          `**Ricavi**: Valore delle vendite di beni e servizi.`,
+          `**Costi**: Valore delle risorse consumate.`
+        ]
+      }
+    ]
+  },
+  {
     id: "formulario-esempi",
     title: "Appendice",
     subsections: [
