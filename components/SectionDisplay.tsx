@@ -130,7 +130,7 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
             </table>
           </div>
 
-          <div className="p-6 rounded-xl border border-border-primary bg-gradient-to-b from-white/5 to-transparent">
+          <div className="risk-reward-chart-container p-6 rounded-xl border border-border-primary bg-gradient-to-b from-white/5 to-transparent">
             <React.Suspense fallback={<div className="h-[300px] w-full animate-pulse bg-premium-glass rounded-lg"></div>}>
               <RiskRewardChart data={chartData} />
             </React.Suspense>
