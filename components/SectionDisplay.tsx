@@ -399,7 +399,7 @@ const SectionDisplay: React.FC<SectionDisplayProps> = ({ section }) => {
           onClose={() => setLightboxImage(null)}
         />
       )}
-      <div className="mb-12">
+      <div className="mb-12" id={section.id !== 'fondamenti-impresa' ? 'fondamenti-impresa' : undefined}>
         <div className="flex items-center gap-3 mb-4">
           {!['glossario', 'formulario-esempi'].includes(section.id) && (
             <span className="text-xs font-mono text-premium-gold uppercase tracking-widest border border-premium-gold/30 px-2 py-1 rounded">
@@ -418,7 +418,9 @@ const SectionDisplay: React.FC<SectionDisplayProps> = ({ section }) => {
             {readingTime} min read
           </span>
         </div>
-        <h2 className="text-4xl sm:text-6xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-br from-content-primary via-content-secondary to-content-muted tracking-tight">
+        <h2
+          className="text-4xl sm:text-6xl font-serif font-bold text-transparent bg-clip-text bg-gradient-to-br from-content-primary via-content-secondary to-content-muted tracking-tight"
+        >
           {section.title}
         </h2>
       </div>
