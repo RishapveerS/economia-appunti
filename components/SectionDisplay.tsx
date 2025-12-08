@@ -2,10 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import katex from 'katex';
 import { MainSection, SubSection, TableData } from '../types';
-import image1 from '../images/image1.jpg';
-import image2 from '../images/image2.jpg';
-import valueChainImg from '../images/value_chain.png';
-import orgChartImg from '../images/org_chart.png';
+
+// Images are in public folder, use direct paths
+const image1 = '/image1.jpg';
+const image2 = '/image2.jpg';
+const valueChainImg = '/value_chain.png';
+const orgChartImg = '/org_chart.png';
 import { Search, X, ZoomIn, Info } from 'lucide-react';
 import { createPortal } from 'react-dom';
 
