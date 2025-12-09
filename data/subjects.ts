@@ -52,52 +52,52 @@ export const subjects: Subject[] = [
         image: "/SECOND-YEAR-IMAGES /ANALISI-2.png"
     },
     {
-        title: "Architettura Calcolatori e OS",
+        title: "Architettura dei Calcolatori e SO",
         year: "Year 2",
         slug: "architettura-os",
-        image: "/placeholder.jpg"
+        image: "/SECOND-YEAR-IMAGES /ARCHITETTURA DEI CALCOLATORI E SISTEMI OPERATIVI'.png"
     },
     {
         title: "Logica e Algebra",
         year: "Year 2",
         slug: "logica-algebra",
-        image: "/placeholder.jpg"
+        image: "/SECOND-YEAR-IMAGES /LOGICA E ALGEBRA'.png"
     },
     {
         title: "Elettromagnetismo e Campi",
         year: "Year 2",
         slug: "elettromagnetismo",
-        image: "/placeholder.jpg"
+        image: "/SECOND-YEAR-IMAGES /ELETTROMAGNETISMO E CAMPI.png"
     },
     {
         title: "Probabilità e Statistica",
         year: "Year 2",
         slug: "probabilita-statistica",
-        image: "/placeholder.jpg"
+        image: "/SECOND-YEAR-IMAGES /  PROBABILITÀ E STATISTICA.png"
     },
     {
         title: "Informazione e Stima",
         year: "Year 2",
         slug: "informazione-stima",
-        image: "/placeholder.jpg"
+        image: "/SECOND-YEAR-IMAGES /INFORMAZIONE E STIMA.png"
     },
     {
-        title: "Segnali per Comunicazioni",
+        title: "Segnali per le Comunicazioni",
         year: "Year 2",
         slug: "segnali-comunicazioni",
-        image: "/placeholder.jpg"
+        image: "/SECOND-YEAR-IMAGES /    SEGNALI PER LE COMUNICAZIONI.png"
     },
     {
-        title: "Algoritmi e Principi Inf.",
+        title: "Algoritmi e Principi dell'Informatica",
         year: "Year 2",
         slug: "algoritmi",
-        image: "/placeholder.jpg"
+        image: "/SECOND-YEAR-IMAGES /    ALGORITMI E PRINCIPI DELL'INFORMATICA.png"
     },
     {
         title: "Fondamenti di Automatica",
         year: "Year 2",
         slug: "automatica",
-        image: "/placeholder.jpg"
+        image: "/SECOND-YEAR-IMAGES /    FONDAMENTI DI AUTOMATICA.png"
     },
 
     // 3rd Year
@@ -105,36 +105,36 @@ export const subjects: Subject[] = [
         title: "Fondamenti di Elettronica",
         year: "Year 3",
         slug: "elettronica",
-        image: "/placeholder.jpg"
+        image: "/THIRD-YEAR-IMAGES  /    FONDAMENTI DI ELETTRONICA.png"
     },
     {
         title: "Sistemi Informativi",
         year: "Year 3",
         slug: "sistemi-informativi",
-        image: "/placeholder.jpg"
+        image: "/THIRD-YEAR-IMAGES  /SISTEMI INFORMATIVI.png"
     },
     {
         title: "Basi di Dati 1",
         year: "Year 3",
         slug: "basi-dati-1",
-        image: "/placeholder.jpg"
+        image: "/THIRD-YEAR-IMAGES  /    BASI DI DATI 1.png"
     },
     {
         title: "Reti Logiche",
         year: "Year 3",
         slug: "reti-logiche",
-        image: "/placeholder.jpg"
+        image: "/THIRD-YEAR-IMAGES  /RETI LOGICHE.png"
     },
     {
         title: "Ingegneria del Software",
         year: "Year 3",
         slug: "ingegneria-software",
-        image: "/placeholder.jpg"
+        image: "/THIRD-YEAR-IMAGES  /    INGEGNERIA DEL SOFTWARE.png"
     },
     {
         title: "Fond. Comunicazioni e Internet",
         year: "Year 3",
         slug: "internet",
-        image: "/placeholder.jpg"
+        image: "/THIRD-YEAR-IMAGES  /FONDAMENTI DI COMUNICAZIONE E INTERNET.png"
     },
 ];
