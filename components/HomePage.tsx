@@ -37,7 +37,7 @@ const HomePage: React.FC = () => {
             {/* Header */}
             <header className="w-full py-3 flex justify-center items-center relative shrink-0">
                 <h1 className="font-serif italic text-3xl md:text-4xl text-black dark:text-white select-none">
-                    College Notes
+                    Book of Notes
                 </h1>
                 <div className="absolute right-6 top-1/2 -translate-y-1/2">
                     <ThemeToggle />

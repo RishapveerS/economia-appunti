@@ -15,7 +15,7 @@ const LandingPage: React.FC = () => {
 
                 {/* Signature Title */}
                 <h1 className="font-serif italic text-5xl sm:text-7xl md:text-8xl text-white/90 mb-8 tracking-wide select-none">
-                    College Notes
+                    Book of Notes
                 </h1>
 
                 {/* Tagline */}
