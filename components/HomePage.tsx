@@ -51,35 +51,32 @@ const HomePage: React.FC = () => {
                         const isStaggered = index % 2 !== 0;
 
                         return (
-                            <button
+                            <div
                                 key={subject.slug}
-                                onClick={() => handleSubjectClick(subject)}
-                                className={`
-                  group relative block h-[85%] hover:h-[95%] 
-                  transition-all duration-500 ease-out cursor-pointer overflow-hidden
-                `}
+                                className="flex flex-col items-center h-[85%] hover:h-[95%] transition-all duration-500 ease-out"
                                 style={{ width: 'clamp(140px, 15vw, 240px)' }}
                             >
-                                {/* Image IS the strip */}
-                                <img
-                                    src={subject.image}
-                                    alt={subject.title}
-                                    className="w-full h-full object-cover filter grayscale-[60%] brightness-95 dark:brightness-75
-                               group-hover:grayscale-0 group-hover:brightness-100 dark:group-hover:brightness-100
-                               transition-all duration-700 group-hover:scale-105"
-                                    onError={(e) => {
-                                        (e.target as HTMLImageElement).src = '/images/placeholder.jpg';
-                                    }}
-                                />
-                                {/* Title Overlay (on hover) */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent 
-                                opacity-0 group-hover:opacity-100 transition-opacity duration-500
-                                flex flex-col justify-end p-4">
-                                    <h3 className="font-serif text-white text-sm md:text-base leading-tight text-center">
-                                        {subject.title}
-                                    </h3>
-                                </div>
-                            </button>
+                                <button
+                                    onClick={() => handleSubjectClick(subject)}
+                                    className="group relative block flex-1 w-full cursor-pointer overflow-hidden"
+                                >
+                                    {/* Image IS the strip */}
+                                    <img
+                                        src={subject.image}
+                                        alt={subject.title}
+                                        className="w-full h-full object-cover filter grayscale-[60%] brightness-95 dark:brightness-75
+                                   group-hover:grayscale-0 group-hover:brightness-100 dark:group-hover:brightness-100
+                                   transition-all duration-700 group-hover:scale-105"
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).src = '/images/placeholder.jpg';
+                                        }}
+                                    />
+                                </button>
+                                {/* Title below the image */}
+                                <h3 className="font-serif text-black dark:text-white text-sm md:text-base leading-tight text-center mt-2 px-1">
+                                    {subject.title}
+                                </h3>
+                            </div>
                         );
                     })}
                 </div>
