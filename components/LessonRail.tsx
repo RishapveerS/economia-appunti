@@ -1,7 +1,40 @@
 
 import React from 'react';
+import katex from 'katex';
 import { MainSection } from '../types';
 import { useScrollSpy } from '../hooks/useScrollSpy';
+
+// Helper to render math in titles
+const renderTitleWithMath = (title: string) => {
+  const mathPattern = /(\$[^$]+\$)/g;
+  const parts = title.split(mathPattern);
+
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.startsWith('$') && part.endsWith('$')) {
+          const latex = part.substring(1, part.length - 1);
+          try {
+            const html = katex.renderToString(latex, {
+              throwOnError: false,
+              displayMode: false,
+            });
+            return (
+              <span
+                key={index}
+                className="inline-math"
+                dangerouslySetInnerHTML={{ __html: html }}
+              />
+            );
+          } catch (e) {
+            return <span key={index}>{part}</span>;
+          }
+        }
+        return <span key={index}>{part}</span>;
+      })}
+    </>
+  );
+};
 
 interface LessonRailProps {
   content: MainSection[];
@@ -71,7 +104,7 @@ const LessonRail: React.FC<LessonRailProps> = ({ content, className = '', onLink
                         : 'text-content-muted hover:text-content-secondary'
                         }`}
                     >
-                      {subsection.title.replace(/-->/g, '').trim()}
+                      {renderTitleWithMath(subsection.title.replace(/-->/g, '').trim())}
                     </button>
                   );
                 })}

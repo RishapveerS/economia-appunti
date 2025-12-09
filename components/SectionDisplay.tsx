@@ -50,23 +50,15 @@ const isTableData = (item: string | TableData): item is TableData => {
 // 2. $inline math$ (group 2), handling escaped dollars if we wanted, but simple $...$ for now
 const contentPattern = /(\*\*[^*]+\*\*)|(\$[^$]+\$)/g;
 
-const renderWithHighlights = (value: string, boldClass = "font-bold text-content-primary") => {
-  if (!value) return null;
-
-  // Normalize invisible chars once here too, just in case
-  const normalizedValue = value.replace(/[\u200B\u200C\u200D\u200E\u200F\uFEFF]/g, '');
-
-  const parts = normalizedValue.split(contentPattern);
+// Helper to render just the math parts of a string
+const renderMathParts = (text: string, keyPrefix: string = '') => {
+  const mathPattern = /(\$[^$]+\$)/g;
+  const parts = text.split(mathPattern);
 
   return (
     <>
       {parts.map((part, index) => {
         if (!part) return null;
-
-        if (part.startsWith('**') && part.endsWith('**')) {
-          const content = part.substring(2, part.length - 2);
-          return <strong key={index} className={boldClass}>{content}</strong>;
-        }
 
         if (part.startsWith('$') && part.endsWith('$')) {
           const latex = part.substring(1, part.length - 1);
@@ -77,17 +69,45 @@ const renderWithHighlights = (value: string, boldClass = "font-bold text-content
             });
             return (
               <span
-                key={index}
-                className="inline-math text-premium-gold font-serif px-1"
+                key={`${keyPrefix}${index}`}
+                className="inline-math"
                 dangerouslySetInnerHTML={{ __html: html }}
               />
             );
           } catch (e) {
-            return <span key={index} className="text-red-400">{part}</span>;
+            return <span key={`${keyPrefix}${index}`} className="text-red-400">{part}</span>;
           }
         }
 
-        return <span key={index}>{part}</span>;
+        return <span key={`${keyPrefix}${index}`}>{part}</span>;
+      })}
+    </>
+  );
+};
+
+const renderWithHighlights = (value: string, boldClass = "font-bold text-content-primary") => {
+  if (!value) return null;
+
+  // Normalize invisible chars once here too, just in case
+  const normalizedValue = value.replace(/[\u200B\u200C\u200D\u200E\u200F\uFEFF]/g, '');
+
+  // Match bold first, then process math inside each part
+  const boldPattern = /(\*\*[^*]+\*\*)/g;
+  const parts = normalizedValue.split(boldPattern);
+
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (!part) return null;
+
+        if (part.startsWith('**') && part.endsWith('**')) {
+          const content = part.substring(2, part.length - 2);
+          // Recursively process math inside bold content
+          return <strong key={index} className={boldClass}>{renderMathParts(content, `bold-${index}-`)}</strong>;
+        }
+
+        // Process math in non-bold parts
+        return <span key={index}>{renderMathParts(part, `text-${index}-`)}</span>;
       })}
     </>
   );
@@ -206,8 +226,10 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
   if (imageMatch) {
     const [, alt, src] = imageMatch;
     return (
-      <div className="float-right ml-6 mb-4 w-64 lg:w-80">
-        <ImageThumbnail src={src} alt={alt} onImageClick={onImageClick} />
+      <div className="my-6 w-full flex justify-center">
+        <div className="max-w-md">
+          <ImageThumbnail src={src} alt={alt} onImageClick={onImageClick} />
+        </div>
       </div>
     );
   }
@@ -400,7 +422,7 @@ interface SubSectionDisplayProps {
 const SubSectionDisplay: React.FC<SubSectionDisplayProps> = ({ subsection, anchorId, onImageClick }) => (
   <div id={anchorId} className="mb-8 last:mb-0">
     <h3 className="text-2xl sm:text-3xl font-serif text-content-primary mb-6 pb-4">
-      {subsection.title}
+      {renderMathParts(subsection.title, 'title-')}
     </h3>
     <div className="space-y-4 text-content-secondary">
       {subsection.content.map((item, index) => (
