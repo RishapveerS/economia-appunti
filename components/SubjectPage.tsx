@@ -4,6 +4,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { subjects } from '../data/subjects';
 import { courseContent as economiaContent } from '../data/courseContent';
 import { informaticaContent } from '../data/courseContent-informatica';
+import { analisi1CourseContent } from '../data/courseContent-analisi1';
 import ThemeToggle from './ThemeToggle';
 import { Menu, X, ChevronRight, BookOpen, Clock, ChevronDown } from 'lucide-react';
 import SectionDisplay from './SectionDisplay';
@@ -15,6 +16,7 @@ const SUBJECT_THEME_MAP: Record<string, string> = {
     'elementi-informatica': 'theme-teal',      // Teal & Copper
     'fondamenti-informatica': 'theme-teal',    // Teal & Copper
     'calcolatori-elettronici': 'theme-teal',   // Teal & Copper
+    'analisi-1': 'theme-math',                 // Classic Math (B&W)
     'analisi-matematica-1': 'theme-math',      // Classic Math (B&W)
     'analisi-matematica-2': 'theme-math',      // Classic Math (B&W)
     'algebra-lineare': 'theme-logic',          // Deep Indigo
@@ -47,10 +49,10 @@ const SubjectPage: React.FC = () => {
     // Resolve Subject Metadata
     const subject = subjects.find(s => s.slug === activeSlug);
 
-    // Content Map
     const CONTENT_MAP: Record<string, typeof economiaContent> = {
         'economia': economiaContent,
-        'fondamenti-informatica': informaticaContent
+        'fondamenti-informatica': informaticaContent,
+        'analisi-1': analisi1CourseContent
     };
 
     // Resolve Content

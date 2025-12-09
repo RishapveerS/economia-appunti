@@ -201,6 +201,27 @@ const ContentRenderer: React.FC<{ item: string | TableData; onImageClick: (src: 
   // Check for math pattern
   const normalizedText = text.replace(/^[\u200B\u200C\u200D\u200E\u200F\uFEFF]+/, '');
 
+  // Check for markdown image syntax: ![alt](url)
+  const imageMatch = normalizedText.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+  if (imageMatch) {
+    const [, alt, src] = imageMatch;
+    return (
+      <div className="float-right ml-6 mb-4 w-64 lg:w-80">
+        <ImageThumbnail src={src} alt={alt} onImageClick={onImageClick} />
+      </div>
+    );
+  }
+
+  // Check for italic caption (starts with *)
+  if (normalizedText.startsWith('*') && normalizedText.endsWith('*') && !normalizedText.startsWith('**')) {
+    const caption = normalizedText.slice(1, -1);
+    return (
+      <p className="text-xs font-mono text-content-muted text-center italic mt-2 mb-6">
+        {caption}
+      </p>
+    );
+  }
+
   if (normalizedText.startsWith('$$')) {
     const latex = normalizedText.replace(/^\$\$|\$\$$/g, '');
     return (
