@@ -51,6 +51,23 @@ const SubjectPage: React.FC = () => {
 
     const [content, setContent] = useState<MainSection[] | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [visibleSections, setVisibleSections] = useState(2); // Start with just 2 sections for instant render
+
+    useEffect(() => {
+        // Reset visible sections when subject changes
+        setVisibleSections(2);
+    }, [activeSlug]);
+
+    useEffect(() => {
+        // Progressive rendering: if we have more content than currently visible, 
+        // schedule the next chunk to render
+        if (content && visibleSections < content.length) {
+            const timer = requestAnimationFrame(() => {
+                setVisibleSections(prev => Math.min(prev + 3, content.length));
+            });
+            return () => cancelAnimationFrame(timer);
+        }
+    }, [visibleSections, content]);
 
     useEffect(() => {
         const fetchContent = async () => {
@@ -153,9 +170,13 @@ const SubjectPage: React.FC = () => {
                 {/* Main Content */}
                 <main className="flex-1 min-w-0 pb-20 lg:ml-80">
                     <div className="flex flex-col gap-10 md:gap-12 max-w-4xl">
-                        {content.map((section) => (
+                        {content.slice(0, visibleSections).map((section) => (
                             <SectionDisplay key={section.id} section={section} />
                         ))}
+                        {/* Placeholder for remaining content to reserve scroll space (optional, but keeps scrollbar stable-ish) */}
+                        {visibleSections < content.length && (
+                            <div className="h-screen w-full" />
+                        )}
                     </div>
                 </main>
             </div>
