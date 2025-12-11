@@ -1,34 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { subjects } from '../data/subjects';
-import { courseContent as economiaContent } from '../data/courseContent';
-import { informaticaContent } from '../data/courseContent-informatica';
-import { analisi1CourseContent } from '../data/courseContent-analisi1';
-import { geometriaCourseContent } from '../data/courseContent-geometria';
+// Content loaded dynamically via utils/contentLoader
+import { MainSection } from '../types';
+import { loadContent } from '../utils/contentLoader';
 import ThemeToggle from './ThemeToggle';
-import { Menu, ChevronRight } from 'lucide-react';
+import { Menu, X, ChevronRight, BookOpen, Clock, ChevronDown } from 'lucide-react';
 import SectionDisplay from './SectionDisplay';
 import LessonRail from './LessonRail';
 
 // Map subjects to theme class names defined in index.css
 const SUBJECT_THEME_MAP: Record<string, string> = {
-    'economia': 'theme-emerald',
-    'elementi-informatica': 'theme-teal',
-    'fondamenti-informatica': 'theme-teal',
-    'calcolatori-elettronici': 'theme-teal',
-    'analisi-1': 'theme-math',
-    'analisi-matematica-1': 'theme-math',
-    'analisi-matematica-2': 'theme-math',
-    'algebra-lineare': 'theme-logic',
-    'geometria-algebra': 'theme-logic',
-    'fisica-generale-1': 'theme-blue',
-    'fisica-generale-2': 'theme-blue',
-    'algoritmi-strutture-dati': 'theme-crimson',
-    'chimica': 'theme-stats',
-    'automazione': 'theme-bronze',
-    'ingegneria-software': 'theme-silver',
-    'statistica': 'theme-stats',
-    'sistemi-operativi': 'theme-teal',
+    'economia': 'theme-emerald',               // Emerald & Finance
+    'elementi-informatica': 'theme-teal',      // Teal & Copper
+    'fondamenti-informatica': 'theme-teal',    // Teal & Copper
+    'calcolatori-elettronici': 'theme-teal',   // Teal & Copper
+    'analisi-1': 'theme-math',                 // Classic Math (B&W)
+    'analisi-matematica-1': 'theme-math',      // Classic Math (B&W)
+    'analisi-matematica-2': 'theme-math',      // Classic Math (B&W)
+    'algebra-lineare': 'theme-logic',          // Deep Indigo
+    'geometria-algebra': 'theme-logic', // Deep Indigo
+    'fisica-generale-1': 'theme-blue',         // Royal Blue
+    'fisica-generale-2': 'theme-blue',         // Royal Blue
+    'algoritmi-strutture-dati': 'theme-crimson',// Crimson Red
+    'chimica': 'theme-stats',                  // Yellow/Graphite (reused stats for contrast)
+    'automazione': 'theme-bronze',             // Sepia/Bronze
+    'ingegneria-software': 'theme-silver',     // Monochrome/Silver
+    'statistica': 'theme-stats',               // Yellow/Graphite
+    'sistemi-operativi': 'theme-teal',         // Teal/Terminal
+
+    // Fallback defaults
     'default': 'theme-math'
 };
 
@@ -38,7 +39,7 @@ const SubjectPage: React.FC = () => {
     const navigate = useNavigate();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-    // Determine active slug
+    // Determine active slug: handle explicit param OR implicit path
     let activeSlug = slug;
     if (!activeSlug && location.pathname === '/economia') {
         activeSlug = 'economia';
@@ -48,46 +49,78 @@ const SubjectPage: React.FC = () => {
     // Resolve Subject Metadata
     const subject = subjects.find(s => s.slug === activeSlug);
 
-    // Static content map - NO dynamic imports
-    const CONTENT_MAP: Record<string, typeof economiaContent> = {
-        'economia': economiaContent,
-        'fondamenti-informatica': informaticaContent,
-        'analisi-1': analisi1CourseContent,
-        'geometria-algebra': geometriaCourseContent
-    };
+    const [content, setContent] = useState<MainSection[] | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [visibleSections, setVisibleSections] = useState(2); // Start with just 2 sections for instant render
 
-    // Resolve Content
-    const content = CONTENT_MAP[activeSlug] || null;
+    useEffect(() => {
+        // Reset visible sections when subject changes
+        setVisibleSections(2);
+    }, [activeSlug]);
+
+    useEffect(() => {
+        // Progressive rendering: if we have more content than currently visible, 
+        // schedule the next chunk to render
+        if (content && visibleSections < content.length) {
+            const timer = requestAnimationFrame(() => {
+                setVisibleSections(prev => Math.min(prev + 3, content.length));
+            });
+            return () => cancelAnimationFrame(timer);
+        }
+    }, [visibleSections, content]);
+
+    useEffect(() => {
+        const fetchContent = async () => {
+            setIsLoading(true);
+            const data = await loadContent(activeSlug);
+            setContent(data);
+            setIsLoading(false);
+        };
+
+        fetchContent();
+    }, [activeSlug]);
 
     // Resolve Theme Class
     const themeClass = SUBJECT_THEME_MAP[activeSlug] || 'theme-math';
 
     if (!subject) {
         return (
-            <div className="min-h-screen bg-[var(--bg-body)] flex items-center justify-center text-content-primary">
+            <div className="min-h-screen bg-neutral-900 flex items-center justify-center text-white">
                 <div className="text-center">
                     <p className="text-xl mb-4">Materia non trovata: {activeSlug}</p>
-                    <button onClick={() => navigate('/subjects')} className="text-premium-gold underline">Torna all'indice</button>
+                    <button onClick={() => navigate('/subjects')} className="text-yellow-500 underline">Torna all'indice</button>
                 </div>
+            </div>
+        );
+    }
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-neutral-900 text-white p-8 flex flex-col items-center justify-center">
+                <div className="w-12 h-12 border-4 border-yellow-500/30 border-t-yellow-500 rounded-full animate-spin mb-6"></div>
+                <h1 className="text-2xl font-serif text-yellow-500 mb-2">{subject.title}</h1>
+                <p className="text-neutral-400">Caricamento appunti...</p>
             </div>
         );
     }
 
     if (!content) {
         return (
-            <div className={`min-h-screen ${themeClass} bg-[var(--bg-body)] text-content-primary p-8 flex flex-col items-center justify-center`}>
-                <button onClick={() => navigate('/subjects')} className="absolute top-8 left-8 text-content-muted hover:text-content-primary flex items-center gap-2">
+            <div className="min-h-screen bg-neutral-900 text-white p-8 flex flex-col items-center justify-center">
+                <button onClick={() => navigate('/subjects')} className="absolute top-8 left-8 text-neutral-400 hover:text-white flex items-center gap-2">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                     Torna
                 </button>
                 <div className="text-6xl mb-6">🚧</div>
-                <h1 className="text-3xl font-serif text-premium-gold mb-4">{subject.title}</h1>
-                <p className="text-content-muted">Contenuto in arrivo...</p>
+                <h1 className="text-3xl font-serif text-yellow-500 mb-4">{subject.title}</h1>
+                <p className="text-neutral-400">Contenuto in arrivo...</p>
             </div>
         );
     }
 
     return (
+        // Apply the theme class to the wrapper.
+        // This will redefine the CSS variables (--bg-body, --premium-gold, etc.) for all children.
         <div className={`min-h-screen transition-colors duration-300 ${themeClass}`}>
 
             {/* Background Gradient using Vars */}
@@ -119,7 +152,7 @@ const SubjectPage: React.FC = () => {
             </header>
 
             <div className="max-w-7xl mx-auto pt-20 px-4 relative z-10">
-                {/* Sidebar (TOC) - Desktop */}
+                {/* Sidebar (TOC) - Desktop (FIXED POSITION RESTORED) */}
                 <aside className={`fixed inset-y-0 left-0 z-40 w-72 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 bg-premium-dark lg:bg-transparent lg:fixed lg:left-8 lg:top-32 lg:bottom-10 lg:w-64 lg:z-40 pt-20 lg:pt-0 pb-8 h-screen lg:h-auto`}>
                     <div className="px-6 lg:px-0 h-full overflow-y-auto custom-scrollbar">
                         <LessonRail content={content} onLinkClick={() => setIsSidebarOpen(false)} className="" />
@@ -137,9 +170,13 @@ const SubjectPage: React.FC = () => {
                 {/* Main Content */}
                 <main className="flex-1 min-w-0 pb-20 lg:ml-80">
                     <div className="flex flex-col gap-10 md:gap-12 max-w-4xl">
-                        {content.map((section) => (
+                        {content.slice(0, visibleSections).map((section) => (
                             <SectionDisplay key={section.id} section={section} />
                         ))}
+                        {/* Placeholder for remaining content to reserve scroll space (optional, but keeps scrollbar stable-ish) */}
+                        {visibleSections < content.length && (
+                            <div className="h-screen w-full" />
+                        )}
                     </div>
                 </main>
             </div>
