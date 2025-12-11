@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { subjects } from '../data/subjects';
-import { MainSection } from '../types';
-import { loadContent, getCachedContent } from '../utils/contentLoader';
+import { courseContent as economiaContent } from '../data/courseContent';
+import { informaticaContent } from '../data/courseContent-informatica';
+import { analisi1CourseContent } from '../data/courseContent-analisi1';
+import { geometriaCourseContent } from '../data/courseContent-geometria';
 import ThemeToggle from './ThemeToggle';
 import { Menu, ChevronRight } from 'lucide-react';
 import SectionDisplay from './SectionDisplay';
@@ -45,45 +47,21 @@ const SubjectPage: React.FC = () => {
 
     // Resolve Subject Metadata
     const subject = subjects.find(s => s.slug === activeSlug);
+
+    // Static content map - NO dynamic imports
+    const CONTENT_MAP: Record<string, typeof economiaContent> = {
+        'economia': economiaContent,
+        'fondamenti-informatica': informaticaContent,
+        'analisi-1': analisi1CourseContent,
+        'geometria-algebra': geometriaCourseContent
+    };
+
+    // Resolve Content
+    const content = CONTENT_MAP[activeSlug] || null;
+
+    // Resolve Theme Class
     const themeClass = SUBJECT_THEME_MAP[activeSlug] || 'theme-math';
 
-    // 🚀 INSTANT: Try to get cached content FIRST (synchronous)
-    const cachedContent = useMemo(() => getCachedContent(activeSlug), [activeSlug]);
-
-    const [content, setContent] = useState<MainSection[] | null>(cachedContent);
-    const [isLoading, setIsLoading] = useState(!cachedContent); // Only loading if not cached
-    const [visibleSections, setVisibleSections] = useState(cachedContent ? 5 : 2);
-
-    // Reset when subject changes
-    useEffect(() => {
-        const cached = getCachedContent(activeSlug);
-        if (cached) {
-            // 🚀 INSTANT: Content is cached, show immediately
-            setContent(cached);
-            setIsLoading(false);
-            setVisibleSections(5); // Show more sections immediately since content is ready
-        } else {
-            // Content not cached, need to load
-            setVisibleSections(2);
-            setIsLoading(true);
-            loadContent(activeSlug).then(data => {
-                setContent(data);
-                setIsLoading(false);
-            });
-        }
-    }, [activeSlug]);
-
-    // Progressive rendering for remaining sections
-    useEffect(() => {
-        if (content && visibleSections < content.length) {
-            const timer = requestAnimationFrame(() => {
-                setVisibleSections(prev => Math.min(prev + 5, content.length));
-            });
-            return () => cancelAnimationFrame(timer);
-        }
-    }, [visibleSections, content]);
-
-    // Error states
     if (!subject) {
         return (
             <div className="min-h-screen bg-[var(--bg-body)] flex items-center justify-center text-content-primary">
@@ -91,17 +69,6 @@ const SubjectPage: React.FC = () => {
                     <p className="text-xl mb-4">Materia non trovata: {activeSlug}</p>
                     <button onClick={() => navigate('/subjects')} className="text-premium-gold underline">Torna all'indice</button>
                 </div>
-            </div>
-        );
-    }
-
-    // 🚀 Only show loading if content truly isn't ready
-    if (isLoading && !content) {
-        return (
-            <div className={`min-h-screen ${themeClass} bg-[var(--bg-body)] text-content-primary p-8 flex flex-col items-center justify-center`}>
-                <div className="w-10 h-10 border-2 border-content-primary/20 border-t-content-primary/60 rounded-full animate-spin mb-4"></div>
-                <h1 className="text-xl font-serif text-premium-gold mb-2">{subject.title}</h1>
-                <p className="text-content-muted text-sm">Caricamento...</p>
             </div>
         );
     }
@@ -121,8 +88,6 @@ const SubjectPage: React.FC = () => {
     }
 
     return (
-        // Apply the theme class to the wrapper.
-        // This will redefine the CSS variables (--bg-body, --premium-gold, etc.) for all children.
         <div className={`min-h-screen transition-colors duration-300 ${themeClass}`}>
 
             {/* Background Gradient using Vars */}
@@ -154,7 +119,7 @@ const SubjectPage: React.FC = () => {
             </header>
 
             <div className="max-w-7xl mx-auto pt-20 px-4 relative z-10">
-                {/* Sidebar (TOC) - Desktop (FIXED POSITION RESTORED) */}
+                {/* Sidebar (TOC) - Desktop */}
                 <aside className={`fixed inset-y-0 left-0 z-40 w-72 transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 bg-premium-dark lg:bg-transparent lg:fixed lg:left-8 lg:top-32 lg:bottom-10 lg:w-64 lg:z-40 pt-20 lg:pt-0 pb-8 h-screen lg:h-auto`}>
                     <div className="px-6 lg:px-0 h-full overflow-y-auto custom-scrollbar">
                         <LessonRail content={content} onLinkClick={() => setIsSidebarOpen(false)} className="" />
@@ -172,13 +137,9 @@ const SubjectPage: React.FC = () => {
                 {/* Main Content */}
                 <main className="flex-1 min-w-0 pb-20 lg:ml-80">
                     <div className="flex flex-col gap-10 md:gap-12 max-w-4xl">
-                        {content.slice(0, visibleSections).map((section) => (
+                        {content.map((section) => (
                             <SectionDisplay key={section.id} section={section} />
                         ))}
-                        {/* Placeholder for remaining content to reserve scroll space (optional, but keeps scrollbar stable-ish) */}
-                        {visibleSections < content.length && (
-                            <div className="h-screen w-full" />
-                        )}
                     </div>
                 </main>
             </div>
